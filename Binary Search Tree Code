@@ -1,0 +1,198 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+
+class node
+{
+public:
+	int key;
+	node* left;
+	node* right;
+
+	node(int k)
+	{
+		//this != NULL;
+		this->key = k;
+		left = NULL;
+		right = NULL;
+	}
+};
+
+
+node* insert(node* root, int data)
+{
+	if (root == NULL)
+	{
+		//cout << "x";
+		return new node(data);
+	}
+
+	if (data<root->key)
+	{
+		cout << "x";
+		root->left = insert(root->left, data);
+	}
+	else
+	{
+		cout << "x";
+		root->right = insert(root->right, data);
+	}
+	return root;
+}
+node* find_min(node*root)
+{
+	while (root->left != NULL)
+	{
+		root = root->left;
+	}
+	return root;
+}
+node* removee(node* root, int key)
+{
+	if (root == NULL)
+	{
+		return NULL;
+	}
+	else if (key < root->key)
+	{
+		root->left = removee(root->left, key);
+	}
+	else if (key > root->key)
+	{
+		root->right = removee(root->right, key);
+	}
+	else
+	{
+		//when node is found
+		//case 1(no child)
+		if (root->left == NULL && root->right == NULL)
+		{
+			delete root;
+			root = NULL;
+			
+		}
+		//case 2(1 child)
+		else if (root->left == NULL)
+		{
+			node* temp = root;
+			root = root->right;
+			delete temp;
+		}
+		else if (root->right == NULL)
+		{
+			node* temp = root;
+			root = root->left;
+			delete temp;
+		}
+		//case 3(2 child)
+		else
+		{
+			node* temp = find_min(root->right);
+			root->key = temp->key;
+			root->right = removee(root->right, temp->key);
+		}
+		return root;
+	}
+		 
+
+
+
+}
+void print_inorder(node*root)
+{
+	cout << "a";
+	if (root == NULL)
+	{
+		return;
+	}
+	print_inorder(root->left);
+	cout << root->key<<" , ";
+	print_inorder(root->right);
+}
+bool search(node* root, int key)
+{
+	if (root == NULL)
+	{
+		return false;
+	}
+	if (root->key = key)
+	{
+		return true;
+	}
+	if (key < root->key)
+	{
+		return search(root->left, key);
+	}
+	else
+	{
+	return search(root->right, key);
+	}
+
+}
+void print_in_range(node* root, int start, int end)
+{
+	if (root == NULL)
+	{
+		return;
+	}
+	if (root->key >= start && root->key <= end)
+	{
+		print_in_range(root->left, start, end);
+		cout << root->key << "  ";
+		print_in_range(root->right, start, end);
+	}
+	else if (root->key >= end) {
+		print_in_range(root->left, start, end);
+	}
+	else
+	{
+		print_in_range(root->right, start, end);
+	}
+}
+void root_to_leaf_path(node* root, vector<int>& path)
+{
+	if (root == NULL)
+	{
+		return;
+	}
+	if (root->left == NULL && root->right == NULL)
+	{
+		for (int node_data : path)
+		{
+			cout << node_data << "->";
+		}
+		cout << endl;
+		cout << root->key << "  ";
+		return;
+	}
+	path.push_back(root->key);
+	root_to_leaf_path(root->left, path);
+	root_to_leaf_path(root->right, path);
+	path.pop_back();
+	return;
+}
+
+
+int main()
+{
+	node* root = NULL;
+	int arraay[] = { 8,3,10,1,6,14,4,7,13 };
+
+	for (int x:arraay)
+	{
+		insert(root, x);
+	}
+	print_inorder(root);
+
+
+
+	int key;
+	cin >> key;
+	root = removee(root, key);
+	print_inorder(root);
+
+
+	print_in_range(root, 5, 12);
+	return 0;
+}
