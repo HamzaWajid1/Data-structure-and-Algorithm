@@ -1,0 +1,81 @@
+#include<iostream>
+#include<string>
+#include<unordered_map>
+using namespace std;
+
+
+
+class node
+{
+public:
+	char data;
+	unordered_map<char, node*>m;
+	bool is_terminal;
+
+	node(char d)
+	{
+		data = d;
+		is_terminal = false;
+	}
+};
+
+class trie
+{
+	node* root;
+public:
+	trie()
+	{
+		root = new node('\0');
+	}
+	//insertion
+	void insert(string word) {
+		node* temp=root;
+		for (char ch : word)
+		{
+			if (temp->m.count(ch) == 0)
+			{
+				node* new_node = new node(ch);
+				temp->m[ch] = new_node;
+			}
+			temp = temp->m[ch];
+        }
+		temp->is_terminal = true;
+
+	}
+	//searching
+	bool search(string word)
+	{
+		node* temp = root;
+		for (char ch : word)
+		{
+			if (temp->m.count(ch) == 0)
+			{
+				return false;
+			}
+			temp = temp->m[ch];
+		}
+		return temp->is_terminal;
+
+
+	}
+
+
+};
+
+int main()
+{
+	trie t;
+
+	string words[] = { "hello","he","apple","aple","news" };
+
+	for (int i = 0; i < 5; i++)
+	{
+		t.insert(words[i]);
+	}
+	string key;
+	cout << "enter word";
+	cin>> key;
+
+	cout << t.search(key);
+	return 0;
+}
