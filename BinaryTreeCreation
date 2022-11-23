@@ -1,0 +1,170 @@
+#include<iostream>
+using namespace std;
+
+
+
+class list
+{
+	struct node
+	{
+		int data;
+		node* left = NULL;
+		node* right = NULL;
+	};
+public:
+	node* root_pointer;
+
+	list()
+	{
+		root_pointer = NULL;
+	}
+	void createBinaryTreeNode(int d)
+	{
+		
+		node* new_node = new node;
+		new_node->data = d;
+		if (root_pointer == NULL)
+		{
+			root_pointer = new_node;
+		}
+		else
+		{
+			node* temp = root_pointer;
+			while (1)
+			{
+
+				if (d < temp->data)
+				{
+					if (temp->left != NULL)
+					{
+						temp = temp->left;
+					}
+					else
+					{
+						temp->left = new_node;
+						break;
+					}
+				}
+
+
+				else if (d > temp->data)
+
+				{
+					if (temp->right != NULL)
+					{
+						temp = temp->right;
+					}
+					else
+					{
+						temp->right = new_node;
+						break;
+					}
+				}
+
+			}
+		}
+	}
+
+	bool search(int d,node*temp_pointer)
+	{
+		if (d == temp_pointer->data)
+		{
+			//cout << "found";
+			return 1;
+		}
+		//node* temp_pointer = root_pointer;
+		if (d < temp_pointer->data&&temp_pointer->left!=NULL)
+		{
+			search(d, temp_pointer->left);
+		}
+		else if(d>temp_pointer->data&&temp_pointer->right!=NULL)
+		{
+			search(d, temp_pointer->right);
+		}
+		//cout << "not found";
+		return 0;
+	}
+
+	void in_order(node* root)
+	{
+		if (root != NULL)
+		{
+
+
+			in_order(root->left);
+			cout << root->data;
+			in_order(root->right);
+		}
+	}
+
+	void delete_node(int d, node*& head_pointer)
+	{
+		if (d < head_pointer->data)
+		{
+			delete_node(d, head_pointer->left);
+		}
+		else if (d > head_pointer->data)
+		{
+			delete_node(d, head_pointer->right);
+		}
+		else
+		{
+			node* temp_pointer = head_pointer;
+			if (head_pointer==NULL)
+			{
+				cout << "cannot delete empty node";
+			}
+	        else if (head_pointer->left == NULL && head_pointer->right == NULL)
+			{
+				delete head_pointer;
+				//head_pointer = NULL;
+			}
+			else if (head_pointer->left == NULL)
+			{
+				head_pointer = head_pointer->right;
+				delete temp_pointer;
+			}
+			else if (head_pointer->right == NULL)
+			{
+				head_pointer = head_pointer->left;
+				delete temp_pointer;
+			}
+			else
+			{
+				temp_pointer = head_pointer->right;
+				while (temp_pointer->left != NULL)
+				{
+					temp_pointer = temp_pointer->left;
+				}
+				temp_pointer->left = head_pointer->left;
+				temp_pointer = head_pointer;
+				head_pointer = head_pointer->right;
+				delete temp_pointer;
+			}
+
+		}
+	}
+
+};
+int main()
+{
+
+	list hamza;
+	hamza.createBinaryTreeNode(8);
+	hamza.createBinaryTreeNode(4);
+	hamza.createBinaryTreeNode(10);
+	hamza.createBinaryTreeNode(2);
+	hamza.createBinaryTreeNode(5);
+	hamza.createBinaryTreeNode(9);
+	hamza.createBinaryTreeNode(12);
+
+	hamza.in_order(hamza.root_pointer);
+	cout << endl;
+	//cout<<hamza.search(13,hamza.root_pointer);
+	hamza.delete_node(12, hamza.root_pointer);
+	cout << endl;
+	hamza.in_order(hamza.root_pointer);
+
+
+	return 0;
+}
