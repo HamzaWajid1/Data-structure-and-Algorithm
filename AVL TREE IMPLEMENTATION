@@ -80,7 +80,7 @@ public:
 			if (d < root->data)
 			{
 				root->left = insert(d, root->left);
-				if (height(root->right) - height(root->left) == 2)
+				if (height(root->right) - height(root->left) == -2)
 				{
 					if (d < root->left->data)
 					{
@@ -97,7 +97,7 @@ public:
 				root->right = insert(d, root->right);
 				if (height(root->right) - height(root->left) == 2)
 				{
-					if (d < root->right->data)
+					if (d > root->right->data)
 					{
 						root = single_rotation_with_right(root);
 					}
