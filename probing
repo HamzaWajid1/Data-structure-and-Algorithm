@@ -1,0 +1,160 @@
+#include<iostream>
+using namespace std;
+
+
+
+class probe
+{
+
+    struct node {
+        int data;
+        node* next = NULL;
+
+    };
+    node** table;
+    int table_size;
+public:
+
+    probe(int ts = 15)
+    {
+        table_size = ts;
+        table = new node * [table_size];
+
+        for (int i = 0; i < table_size; i++)
+        {
+            node* new_node = new node;
+            new_node->data = 0;
+            table[i] = new node;
+            table[i]->data = 0;
+        }
+    }
+
+
+    int hash_index(int data)
+    {
+        return data % table_size;
+    }
+
+    int hash2(int data)
+    {
+        return 7-(data%7);
+    }
+    void insert_linear_prob(int data)
+    {
+
+        int index = hash_index(data);
+        // int i=index;
+        while (table[index]->data != 0)
+        {
+            index = (index + 1) % table_size;
+        }
+        node* new_node = new node;
+        new_node->data = data;
+        table[index]->data = data;
+    }
+
+    void insert_quadratic(int data)
+    {
+       int index=hash_index(data);
+       int i=1;
+       while(table[index]->data!=0)
+       {
+        index=(index+i+(i*i))%table_size;
+        i++;
+       }
+       table[index]->data=data;
+
+    }
+
+    void insert_double_hash(int data)
+    {
+        int index=hash_index(data);
+        int i=1;
+        while(table[index]->data!=0)
+       {
+        index=(hash_index(index)+(i*hash2(data)))%table_size;
+
+        i++;
+       }
+       table[index]->data=data;
+    }
+
+    void print()
+    {
+        for (int i = 0; i < table_size; i++)
+        {
+            if (table[i]->data != 0)
+            {
+                cout << table[i]->data << endl;
+            }
+            else {
+                cout << "NULL" << endl;
+            }
+        }
+    }
+    void delete_linear(int data)
+    {
+        int index = hash_index(data);
+        int prev_index = index;
+        int i = 0;
+        while (table[index]->data != data)
+        {
+
+            index = (index + 1) % table_size;
+            if (i == table_size)
+            {
+                cout << "value not found";
+                break;
+            }
+            i++;
+        }
+        if (i == table_size)
+        {
+            cout << "value not found";
+
+        }
+        else
+        {
+            table[index]->data = 0;
+        }
+    }
+
+};
+
+
+
+int main()
+{
+
+    probe hamza(10);
+    /* hamza.insert_linear_prob(6);
+    hamza.insert_linear_prob(8);
+    hamza.insert_linear_prob(9);
+    hamza.insert_linear_prob(17);
+    hamza.insert_linear_prob(19);
+    hamza.insert_linear_prob(16);
+    hamza.insert_linear_prob(2);
+    hamza.print();
+    hamza.delete_linear(16);
+    //hamza.delete_linear(25);
+    cout << endl;
+    hamza.print();*/
+
+   /* hamza.insert_quadratic(15);
+     hamza.insert_quadratic(14);
+      hamza.insert_quadratic(16);
+       hamza.insert_quadratic(24);
+        hamza.insert_quadratic(26);
+         hamza.insert_quadratic(55);
+          hamza.insert_quadratic(65);*/
+
+hamza.insert_double_hash(15);
+hamza.insert_double_hash(14);
+hamza.insert_double_hash(16);
+hamza.insert_double_hash(24);
+hamza.insert_double_hash(26);
+hamza.insert_double_hash(55);
+hamza.insert_double_hash(65);
+          hamza.print();
+    return 0;
+}
