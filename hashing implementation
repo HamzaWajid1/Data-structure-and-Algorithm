@@ -1,0 +1,200 @@
+#include<iostream>
+#include<string.h>
+#include<string>
+#include<cmath>
+using namespace std;
+
+
+class Hashtable
+{
+
+	struct node
+	{
+		int data;
+		string key;
+		node* next=NULL;
+	};
+	int current_size;
+	int table_size;
+	node** table;
+
+public:
+
+	Hashtable(int ts = 7)
+	{
+		current_size = 0;
+		table_size = ts;
+		table = new node * [table_size];
+		for (int i = 0; i < table_size; i++)
+		{
+			table[i] =NULL;
+		}
+	}
+	int hashfunc(string key)
+	{
+		int index = 0;
+		int power = 1;
+		for (int i = 0; i < key.size(); i++)
+		{
+			index = (index + int(key[i]) * power)%table_size;
+			power = (power * 128)%table_size;
+		}
+
+		//cout << index;
+		return index;
+	}
+	int hashfunction1(string key)
+	{
+		int index = 0;
+		int power = 1;
+		for (int i = 0; i < key.size(); i++)
+		{
+			index = (index + int(key[i]) * power);
+			power = (power * 128);
+		}
+		float x = fmod(index * 0.6153, 1);
+
+		float y = table_size * x;
+		index = int(y);
+		//cout << index;
+		return index;
+	}
+	
+	void insert(string key, int data)
+	{
+		int index = hashfunc(key);
+
+		node* new_node = new node;
+		new_node->data = data;
+		new_node->key = key;
+
+		//This is actually insertion at the head of the linked list
+
+			new_node->next = table[index];
+			table[index] = new_node;
+
+			node* prev = table[index];
+			node* temp = table[index]->next;
+			while (temp != NULL)
+			{
+
+				if (temp->key == table[index]->key)
+				{
+					node* x = temp;
+					prev->next = temp->next;
+					delete x;
+					return;
+				}
+				prev = temp;
+				temp = temp->next;
+			}
+		
+			current_size++;
+
+	}
+	int* search(string key)
+	{
+		int index = hashfunc(key);
+
+		node* temp = table[index];
+		while (temp != NULL)
+		{
+			if (temp->key == key)
+			{
+				return &temp->data;
+			}
+		}
+
+		return NULL;
+	}
+	void erase(string key)
+	{
+		int index = hashfunc(key);
+		node* temp = table[index];
+		if (temp->key == key)
+		{
+			table[index] = table[index]->next;
+			delete temp;
+			return;
+		}
+		else
+		{
+			while (temp != NULL && temp->next != NULL)
+			{
+				if (temp->next->key == key)
+				{
+					node* x = temp->next;
+					temp->next = temp->next->next;
+					delete x;
+					return;
+				}
+
+			}
+		}
+		
+	}
+
+
+	void print()
+	{
+		for (int i = 0; i < table_size; i++)
+		{
+			cout << "Bucket" << i << "->";
+			node* temp = table[i];
+			while (temp != NULL)
+			{
+				cout << temp->key;
+				cout << "->";
+				temp = temp->next;
+			}
+			cout << endl;
+		}
+	}
+
+};
+
+
+
+int main()
+{
+	Hashtable hamza;
+	hamza.insert("affan",1);
+	hamza.insert("saad",2);
+	hamza.insert("hamza", 3);
+	hamza.insert("hifza", 4);
+	hamza.insert("umair", 7);
+	hamza.insert("uzair", 6);
+	hamza.insert("saniya", 8);
+	hamza.insert("mama", 9);
+	hamza.insert("baba", 10);
+	hamza.insert("haider", 11);
+	hamza.insert("saad", 2);
+	hamza.insert("tehrim", 2);
+	hamza.insert("zainab", 2);
+	hamza.insert("lailoma", 2);
+	hamza.insert("mahnoor", 2);
+	hamza.insert("farwa", 2);
+	//hamza.erase("zuhair");
+
+	hamza.print();
+
+
+
+
+	//cout << endl << hamza.search("hamza");
+	/*string fruit = "affn";
+	
+	int* data = hamza.search(fruit);
+	if (data != NULL)
+	{
+		cout << *data;
+	}
+	else
+	{
+		cout << "not found";
+	}*/
+
+	//hamza.erase("affan");
+	//hamza.print();
+	return 0;
+}
